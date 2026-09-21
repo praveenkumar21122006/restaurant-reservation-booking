@@ -1,0 +1,44 @@
+.view{animation:fadeUp .35s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.wizard-step{animation:fadeUp .3s ease both}
+.label{display:block;font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#78716c;margin-bottom:.35rem}
+.input{width:100%;background:#fff;border:1px solid #e7e5e4;border-radius:.9rem;padding:.7rem .9rem;font-size:.9rem;outline:none;transition:.15s}
+.input:focus{border-color:#c2410c;box-shadow:0 0 0 3px rgba(194,65,12,.15)}
+.btn-primary{background:#1c1917;color:#faf7f2;font-weight:700;font-size:.875rem;padding:.7rem 1.25rem;border-radius:.9rem;transition:.15s}
+.btn-primary:hover{background:#9a3412}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-ghost{background:#f5f5f4;font-weight:600;font-size:.875rem;padding:.7rem 1.25rem;border-radius:.9rem;transition:.15s}
+.btn-ghost:hover{background:#e7e5e4}
+.btn-danger{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;font-weight:700;font-size:.875rem;padding:.7rem 1.25rem;border-radius:.9rem}
+.btn-danger:hover{background:#fee2e2}
+.navlink:hover{background:#f5f5f4}
+.navlink.active{background:#1c1917;color:#faf7f2}
+.admintab{font-size:.875rem;font-weight:700;padding:.7rem 1rem;border-bottom:2px solid transparent;color:#78716c}
+.admintab.active{color:#1c1917;border-color:#c2410c}
+.chip{font-size:.75rem;font-weight:600;background:#f5f5f4;border:1px solid #e7e5e4;border-radius:999px;padding:.35rem .8rem}
+.chip:hover{background:#e7e5e4}
+.dot{display:inline-block;width:.6rem;height:.6rem;border-radius:999px;margin-right:.25rem;vertical-align:baseline}
+.slot{border:1.5px solid #e7e5e4;border-radius:.8rem;padding:.6rem .25rem;font-size:.85rem;font-weight:600;text-align:center;cursor:pointer;transition:.15s;background:#fff}
+.slot:hover:not(:disabled){border-color:#c2410c}
+.slot.selected{background:#1c1917;color:#fff;border-color:#1c1917}
+.slot:disabled{opacity:.35;cursor:not-allowed;text-decoration:line-through}
+.partybtn{border:1.5px solid #e7e5e4;background:#fff;border-radius:.9rem;padding:.8rem 0;font-weight:700;transition:.15s}
+.partybtn:hover{border-color:#c2410c}
+.partybtn.selected{background:#c2410c;border-color:#c2410c;color:#fff}
+.tablecard{border-radius:1.1rem;border:2px solid;padding:.9rem;cursor:pointer;transition:.15s;background:#fff}
+.tablecard:hover{transform:translateY(-2px);box-shadow:0 10px 40px -12px rgba(28,25,23,.25)}
+.tablecard.dragover{outline:3px dashed #c2410c;outline-offset:3px}
+.status-pill{font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.25rem .6rem;border-radius:999px}
+.st-Pending{background:#fef9c3;color:#854d0e}
+.st-Confirmed{background:#dbeafe;color:#1d4ed8}
+.st-Checked-In{background:#ffe4e6;color:#be123c}
+.st-Completed{background:#dcfce7;color:#15803d}
+.st-Cancelled{background:#f5f5f4;color:#78716c}
+.iconbtn{font-size:.72rem;font-weight:700;padding:.3rem .6rem;border-radius:.6rem;background:#f5f5f4;border:1px solid #e7e5e4;white-space:nowrap}
+.iconbtn:hover{background:#e7e5e4}
+.stepdot{display:flex;align-items:center;gap:.5rem}
+.stepnum{width:1.75rem;height:1.75rem;border-radius:999px;display:grid;place-items:center;font-size:.75rem;font-weight:800;background:#e7e5e4;color:#78716c;flex-shrink:0}
+.stepdone .stepnum{background:#15803d;color:#fff}
+.stepactive .stepnum{background:#c2410c;color:#fff}
+.steplabel{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#78716c}
+.stepactive .steplabel{color:#1c1917}

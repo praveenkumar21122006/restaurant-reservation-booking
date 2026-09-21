@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ember & Oak — Restaurant Reservations</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cream: '#FAF7F2',
+        sand: '#F1E9DD',
+        ember: '#C2410C',
+        emberdark: '#9A3412',
+        olive: '#44403C',
+        bark: '#1C1917',
+      },
+      fontFamily: {
+        display: ['"Playfair Display"','serif'],
+        body: ['Inter','system-ui','sans-serif'],
+      },
+      boxShadow: { soft: '0 10px 40px -12px rgba(28,25,23,.25)' }
+    }
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-cream text-bark font-body antialiased">
+
+<!-- HEADER -->
+<header class="sticky top-0 z-40 bg-cream/90 backdrop-blur border-b border-stone-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <button onclick="go('home')" class="flex items-center gap-3 text-left">
+      <span class="w-10 h-10 rounded-2xl bg-bark text-cream grid place-items-center font-display text-xl font-bold">E<span class="text-amber-500">&</span>O</span>
+      <span class="leading-tight">
+        <span class="block font-display font-bold text-lg">Ember & Oak</span>
+        <span class="block text-[11px] tracking-[0.2em] uppercase text-stone-500">Modern Kitchen</span>
+      </span>
+    </button>
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <button data-nav="home" onclick="go('home')" class="navlink px-3 py-2 rounded-lg">Home</button>
+      <button data-nav="book" onclick="go('book')" class="navlink px-3 py-2 rounded-lg">Book a Table</button>
+      <button data-nav="manage" onclick="go('manage')" class="navlink px-3 py-2 rounded-lg">My Reservation</button>
+      <button data-nav="admin" onclick="go('admin')" class="navlink px-3 py-2 rounded-lg">Admin</button>
+    </nav>
+    <div class="flex items-center gap-2">
+      <span id="openBadge" class="hidden sm:inline-flex text-xs font-semibold px-3 py-1.5 rounded-full"></span>
+      <button onclick="go('book')" class="hidden sm:inline-flex bg-bark text-cream text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-emberdark transition">Book a Table</button>
+      <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-stone-200" aria-label="Menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobileMenu" class="md:hidden hidden border-t border-stone-200 px-4 py-3 space-y-1 bg-cream">
+    <button onclick="go('home')" class="block w-full text-left px-3 py-2 rounded-lg font-medium">Home</button>
+    <button onclick="go('book')" class="block w-full text-left px-3 py-2 rounded-lg font-medium">Book a Table</button>
+    <button onclick="go('manage')" class="block w-full text-left px-3 py-2 rounded-lg font-medium">My Reservation</button>
+    <button onclick="go('admin')" class="block w-full text-left px-3 py-2 rounded-lg font-medium">Admin Dashboard</button>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
+
+  <!-- ============ HOME ============ -->
+  <section id="view-home" class="view">
+    <div class="mt-6 grid lg:grid-cols-2 gap-6 items-stretch">
+      <div class="relative overflow-hidden rounded-3xl bg-bark text-cream p-8 sm:p-12 shadow-soft flex flex-col justify-center min-h-[420px]">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80&auto=format&fit=crop" alt="Dining room" class="absolute inset-0 w-full h-full object-cover opacity-40">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+        <div class="relative">
+          <div id="heroOpenBadge" class="inline-flex items-center gap-2 text-xs font-semibold bg-white/15 backdrop-blur px-3 py-1.5 rounded-full border border-white/20"></div>
+          <h1 class="font-display text-4xl sm:text-6xl font-bold mt-4 leading-[1.05]">Fire-kissed flavour,<br>table waiting.</h1>
+          <p class="mt-4 text-stone-200 max-w-md">Seasonal cooking over oak embers. Book in under a minute — live availability, instant confirmation code, free modification.</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button onclick="go('book')" class="bg-amber-500 hover:bg-amber-400 text-bark font-bold px-6 py-3.5 rounded-2xl transition shadow-soft">Book a Table →</button>
+            <button onclick="go('manage')" class="bg-white/10 border border-white/25 hover:bg-white/20 px-6 py-3.5 rounded-2xl font-semibold transition">Find my booking</button>
+          </div>
+          <div class="mt-8 grid grid-cols-3 gap-3 max-w-md text-center">
+            <div class="bg-white/10 border border-white/15 rounded-2xl p-3"><div class="font-display text-2xl font-bold" id="statTables">12</div><div class="text-[11px] uppercase tracking-widest text-stone-300">Tables</div></div>
+            <div class="bg-white/10 border border-white/15 rounded-2xl p-3"><div class="font-display text-2xl font-bold" id="statToday">–</div><div class="text-[11px] uppercase tracking-widest text-stone-300">Today</div></div>
+            <div class="bg-white/10 border border-white/15 rounded-2xl p-3"><div class="font-display text-2xl font-bold">4.9★</div><div class="text-[11px] uppercase tracking-widest text-stone-300">Rating</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid gap-6">
+        <div class="bg-white rounded-3xl border border-stone-200 p-6 sm:p-8 shadow-soft">
+          <div class="flex items-center justify-between">
+            <h2 class="font-display text-2xl font-bold">Operating hours</h2>
+            <span class="text-xs text-stone-500">Dynamic • local time</span>
+          </div>
+          <div id="hoursList" class="mt-4 divide-y divide-stone-100"></div>
+          <p class="mt-4 text-xs text-stone-500">Kitchen closes 30 min before close. Slots every 30 min. Each booking holds its table for a 2-hour window.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-6">
+          <div class="bg-white rounded-3xl border border-stone-200 p-6">
+            <h3 class="font-bold">📍 Find us</h3>
+            <p class="text-sm text-stone-600 mt-2">14 Hearth Lane, Old Market<br>Portland, OR • (503) 555-0184<br>hello@emberandoak.example</p>
+          </div>
+          <div class="bg-bark text-cream rounded-3xl p-6">
+            <h3 class="font-bold">How booking works</h3>
+            <ol class="mt-2 text-sm space-y-1.5 text-stone-300">
+              <li>1. Pick party size, date & time</li>
+              <li>2. We check live table availability</li>
+              <li>3. Add details → instant code</li>
+              <li>4. Modify or cancel anytime</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 bg-white border border-stone-200 rounded-3xl p-6 sm:p-8">
+      <h2 class="font-display text-2xl font-bold">Rooms & tables</h2>
+      <div id="homeTables" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+    </div>
+  </section>
+
+  <!-- ============ BOOK ============ -->
+  <section id="view-book" class="view hidden">
+    <div class="mt-6 max-w-3xl mx-auto">
+      <div class="text-center">
+        <p class="text-xs tracking-[0.25em] uppercase text-ember font-bold">Reservation wizard</p>
+        <h1 class="font-display text-3xl sm:text-4xl font-bold mt-1">Book your table</h1>
+      </div>
+      <div id="stepsBar" class="mt-6 grid grid-cols-4 gap-2"></div>
+
+      <div class="mt-4 bg-white border border-stone-200 rounded-3xl shadow-soft p-6 sm:p-8 min-h-[420px] transition-all">
+        <!-- STEP 1 -->
+        <div id="step-1" class="wizard-step">
+          <h2 class="font-display text-2xl font-bold">How many guests?</h2>
+          <p class="text-sm text-stone-500 mt-1">Party size 1–12. Larger than 6? We'll auto-combine adjacent tables.</p>
+          <div id="partyGrid" class="mt-5 grid grid-cols-4 sm:grid-cols-6 gap-2"></div>
+          <div class="mt-6 flex justify-end"><button onclick="wizardNext(2)" class="btn-primary">Continue →</button></div>
+        </div>
+        <!-- STEP 2 -->
+        <div id="step-2" class="wizard-step hidden">
+          <h2 class="font-display text-2xl font-bold">Pick date & time</h2>
+          <p class="text-sm text-stone-500 mt-1">Past dates blocked. Times limited to operating hours.</p>
+          <div class="mt-4 grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="label">Date</label>
+              <input id="bkDate" type="date" class="input" onchange="onDateChange()" />
+              <p id="bkDateHint" class="text-xs text-stone-500 mt-2"></p>
+            </div>
+            <div>
+              <label class="label">Dining zone <span class="text-stone-400">(optional)</span></label>
+              <select id="bkZone" class="input" onchange="renderSlots()">
+                <option value="">Anywhere — best fit</option>
+                <option>Main Hall</option><option>Patio</option><option>Booth Row</option>
+              </select>
+            </div>
+          </div>
+          <label class="label mt-4">Available time slots</label>
+          <div id="slotGrid" class="mt-2 grid grid-cols-3 sm:grid-cols-4 gap-2"></div>
+          <div class="mt-6 flex justify-between"><button onclick="wizardNext(1)" class="btn-ghost">← Back</button><button onclick="wizardNext(3)" class="btn-primary">Check availability →</button></div>
+        </div>
+        <!-- STEP 3 -->
+        <div id="step-3" class="wizard-step hidden">
+          <h2 class="font-display text-2xl font-bold">Live availability</h2>
+          <p id="availSummary" class="text-sm text-stone-500 mt-1"></p>
+          <div id="availResult" class="mt-4"></div>
+          <div class="mt-6 flex justify-between"><button onclick="wizardNext(2)" class="btn-ghost">← Back</button><button id="toDetailsBtn" onclick="wizardNext(4)" class="btn-primary">Continue →</button></div>
+        </div>
+        <!-- STEP 4 -->
+        <div id="step-4" class="wizard-step hidden">
+          <h2 class="font-display text-2xl font-bold">Your details</h2>
+          <p class="text-sm text-stone-500 mt-1">Confirmation is sent instantly with a unique code.</p>
+          <div class="mt-4 grid sm:grid-cols-2 gap-3">
+            <div><label class="label">First name *</label><input id="gFirst" class="input" placeholder="Ava" /></div>
+            <div><label class="label">Last name *</label><input id="gLast" class="input" placeholder="Stone" /></div>
+            <div><label class="label">Email *</label><input id="gEmail" type="email" class="input" placeholder="ava@example.com" /></div>
+            <div><label class="label">Phone *</label><input id="gPhone" type="tel" class="input" placeholder="(503) 555-0100" /></div>
+            <div class="sm:col-span-2"><label class="label">Special occasion / dietary notes</label><textarea id="gNotes" rows="3" class="input" placeholder="Birthday, nut allergy, high chair…"></textarea></div>
+          </div>
+          <p id="formError" class="hidden mt-3 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2"></p>
+          <div class="mt-6 flex justify-between"><button onclick="wizardNext(3)" class="btn-ghost">← Back</button><button onclick="confirmBooking()" class="btn-primary">Confirm reservation ✓</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONFIRMATION ============ -->
+  <section id="view-confirm" class="view hidden">
+    <div class="mt-6 max-w-2xl mx-auto bg-white border border-stone-200 rounded-3xl shadow-soft p-6 sm:p-10 text-center">
+      <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-100 grid place-items-center text-2xl">✓</div>
+      <h1 class="font-display text-3xl font-bold mt-4">You're booked!</h1>
+      <p class="text-sm text-stone-500 mt-1">Show this code at the host stand. A 2-hour table hold applies.</p>
+      <div id="confirmCode" class="mt-4 inline-block font-mono text-3xl font-bold tracking-[0.2em] bg-cream border-2 border-dashed border-stone-300 rounded-2xl px-6 py-3"></div>
+      <div id="confirmDetails" class="mt-6 text-left bg-cream border border-stone-200 rounded-2xl p-5 text-sm"></div>
+      <div class="mt-6 flex flex-wrap justify-center gap-2">
+        <button onclick="startModify()" class="btn-primary">Modify</button>
+        <button onclick="cancelCurrent()" class="btn-danger">Cancel reservation</button>
+        <button onclick="go('home')" class="btn-ghost">Back home</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MANAGE ============ -->
+  <section id="view-manage" class="view hidden">
+    <div class="mt-6 max-w-2xl mx-auto">
+      <h1 class="font-display text-3xl font-bold text-center">Find my reservation</h1>
+      <p class="text-center text-sm text-stone-500 mt-1">Enter your confirmation code (e.g. EO-XXXXXX).</p>
+      <div class="mt-4 bg-white border border-stone-200 rounded-3xl p-6 shadow-soft">
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input id="lookupCode" class="input font-mono uppercase" placeholder="EO-XXXXXX" />
+          <button onclick="lookupBooking()" class="btn-primary whitespace-nowrap">Look up</button>
+        </div>
+        <div id="lookupResult" class="mt-4"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ADMIN ============ -->
+  <section id="view-admin" class="view hidden">
+    <div class="mt-6 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p class="text-xs tracking-[0.25em] uppercase text-ember font-bold">Staff only</p>
+        <h1 class="font-display text-3xl sm:text-4xl font-bold">Floor & ledger</h1>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="openWalkin()" class="btn-primary">+ Walk-in</button>
+        <button onclick="seedDemo()" class="btn-ghost">↺ Reset demo data</button>
+      </div>
+    </div>
+
+    <div id="kpiRow" class="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
+
+    <div class="mt-4 flex gap-2 border-b border-stone-200">
+      <button id="tabFloor" onclick="adminTab('floor')" class="admintab">◉ Floor plan</button>
+      <button id="tabLedger" onclick="adminTab('ledger')" class="admintab">☰ Ledger</button>
+    </div>
+
+    <!-- FLOOR -->
+    <div id="admin-floor" class="mt-4 grid lg:grid-cols-3 gap-4">
+      <div class="lg:col-span-2 bg-white border border-stone-200 rounded-3xl p-5 sm:p-6">
+        <div class="flex flex-wrap gap-2 items-end">
+          <div><label class="label">Service date</label><input id="flDate" type="date" class="input" onchange="renderFloor()" /></div>
+          <div><label class="label">Service time</label><select id="flTime" class="input" onchange="renderFloor()"></select></div>
+          <div class="ml-auto flex items-center gap-3 text-xs font-medium">
+            <span><i class="dot bg-emerald-500"></i> Available</span>
+            <span><i class="dot bg-amber-500"></i> Reserved</span>
+            <span><i class="dot bg-rose-600"></i> Occupied</span>
+          </div>
+        </div>
+        <div id="floorGrid" class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+        <p class="mt-3 text-xs text-stone-500">Tip: drag a reservation from the ledger onto a table to reassign. Click a table for details.</p>
+      </div>
+      <div class="bg-white border border-stone-200 rounded-3xl p-5 sm:p-6">
+        <h3 class="font-bold">Table detail</h3>
+        <div id="tableDetail" class="mt-3 text-sm text-stone-600">Select a table to see its booking for the chosen slot.</div>
+        <h3 class="font-bold mt-6">Now on the floor</h3>
+        <div id="floorNow" class="mt-2 space-y-2 text-sm"></div>
+      </div>
+    </div>
+
+    <!-- LEDGER -->
+    <div id="admin-ledger" class="hidden mt-4 bg-white border border-stone-200 rounded-3xl p-5 sm:p-6">
+      <div class="grid md:grid-cols-4 gap-2">
+        <input id="fSearch" class="input" placeholder="🔍 Guest name, code, phone…" oninput="renderLedger()" />
+        <input id="fDate" type="date" class="input" onchange="renderLedger()" />
+        <select id="fStatus" class="input" onchange="renderLedger()">
+          <option value="">All statuses</option>
+          <option>Pending</option><option>Confirmed</option><option>Checked-In</option><option>Completed</option><option>Cancelled</option>
+        </select>
+        <select id="fSort" class="input" onchange="renderLedger()">
+          <option value="datetime">Sort: date & time</option>
+          <option value="name">Sort: guest name</option>
+          <option value="party">Sort: party size</option>
+        </select>
+      </div>
+      <div class="mt-2 flex gap-2 text-xs">
+        <button onclick="quickFilter('today')" class="chip">Today</button>
+        <button onclick="quickFilter('upcoming')" class="chip">Upcoming</button>
+        <button onclick="quickFilter('past')" class="chip">Past</button>
+        <button onclick="quickFilter('all')" class="chip">Clear</button>
+      </div>
+      <div class="mt-4 overflow-x-auto -mx-5 px-5">
+        <table class="w-full text-sm min-w-[760px]">
+          <thead><tr class="text-left text-xs uppercase tracking-widest text-stone-400 border-b">
+            <th class="py-2">Guest / Code</th><th>Date</th><th>Time</th><th>Party</th><th>Tables</th><th>Status</th><th class="text-right">Actions</th>
+          </tr></thead>
+          <tbody id="ledgerBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- WALK-IN MODAL -->
+<div id="walkinModal" class="hidden fixed inset-0 z-50 grid place-items-center p-4 bg-black/50 backdrop-blur-sm">
+  <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-soft max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between"><h2 class="font-display text-2xl font-bold">Add walk-in</h2><button onclick="closeWalkin()" class="btn-ghost !px-3">✕</button></div>
+    <div class="mt-4 grid grid-cols-2 gap-3">
+      <input id="wFirst" class="input" placeholder="First name *" />
+      <input id="wLast" class="input" placeholder="Last name *" />
+      <input id="wPhone" class="input" placeholder="Phone *" />
+      <input id="wParty" type="number" min="1" max="12" value="2" class="input" />
+      <input id="wDate" type="date" class="input" />
+      <input id="wTime" type="time" class="input" step="1800" />
+    </div>
+    <select id="wTable" class="input mt-3"></select>
+    <p id="wError" class="hidden mt-3 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2"></p>
+    <div class="mt-4 flex justify-end gap-2"><button onclick="closeWalkin()" class="btn-ghost">Cancel</button><button onclick="saveWalkin()" class="btn-primary">Seat walk-in</button></div>
+  </div>
+</div>
+
+<!-- REASSIGN MODAL -->
+<div id="reassignModal" class="hidden fixed inset-0 z-50 grid place-items-center p-4 bg-black/50 backdrop-blur-sm">
+  <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-soft">
+    <h2 class="font-display text-xl font-bold">Change table</h2>
+    <p id="reassignInfo" class="text-sm text-stone-500 mt-1"></p>
+    <select id="reassignSelect" class="input mt-3"></select>
+    <div class="mt-4 flex justify-end gap-2"><button onclick="closeReassign()" class="btn-ghost">Cancel</button><button onclick="saveReassign()" class="btn-primary">Save</button></div>
+  </div>
+</div>
+
+<footer class="border-t border-stone-200 py-8 text-center text-xs text-stone-500">
+  Ember & Oak • Demo SPA • Data persists in your browser's LocalStorage • 2-hour table holds • Built mobile-first
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
